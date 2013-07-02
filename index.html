@@ -27,6 +27,76 @@
         <div id="content">
             <h1>Blog on Computer Science, FP, and other things</h1>
             
+  <a href="#Algebra and Information Structure"></a>
+  <div class="post">
+<h2>Algebra and Information Structure</h2>
+
+<div class="info">
+  Posted on July  2, 2013
+</div>
+
+  <p>Today I am writing on how it’s possible to find structure in information, bundled with functions, and how this can be applied in practice. This is highly applicable to software development but also comes from an interesting theoretical background.</p>
+<p>So, lets begin with information. What can be said about a data set sharing some properties? Is it possible to relate some common operations and make general statements? Lets say we define a data structure working over integers - can it be extended to arbitrary objects forming some property? It would be nice if we could write general algorithms and data structures, with the fundamental constraints in mind, and reuse them to the fullest possible extent.</p>
+<p>Algebra is a mathematical field which discusses, amongst other things, sets and related functions. This allows us to encapsulate information by providing a set of rules that need to be satisfied, in order for the information and possible functions to belong to some abstraction.</p>
+<p>In this post a basic set of abstractions are described and some practical examples are given. These are bundled with corresponding definitions in Haskell code, but the reader does not need any previous knowledge of the language in order to grasp the essence of these constructs.</p>
+<h4 id="algebra">Algebra</h4>
+<p>Lets begin with some definitions required to discuss these topics.</p>
+<p>Given a binary function <span class="math"><em>f</em>(<em>a</em>, <em>a</em>)</span> (denoted inline <span class="math"> † </span>) over a set <span class="math"><em>S</em></span>, the following is of interest (for all <span class="math"><em>a</em>, <em>b</em>, <em>c</em> ∈ <em>S</em></span>):</p>
+<ul>
+<li>function associativity: <span class="math">(<em>a</em> † <em>b</em>) † <em>c</em> = <em>a</em> † (<em>b</em> † <em>c</em>)</span></li>
+<li>identity element <span class="math"><em>e</em></span> of <span class="math"><em>S</em></span>: <span class="math"><em>a</em> † <em>e</em> = <em>e</em> † <em>a</em> = <em>a</em></span></li>
+<li>inverse element <span class="math"><em>a</em><sup> − 1</sup> ∈ <em>S</em></span> of <span class="math"><em>a</em> ∈ <em>S</em></span>: <span class="math"><em>a</em> † <em>a</em><sup> − 1</sup> = <em>a</em><sup> − 1</sup> † <em>a</em> = <em>e</em></span></li>
+</ul>
+<p>Furthermore <span class="math"><em>f</em></span> is <span class="math"><em>c</em><em>l</em><em>o</em><em>s</em><em>e</em><em>d</em></span> over <span class="math"><em>S</em></span> if <span class="math"><em>f</em>(<em>a</em>, <em>b</em>) ∈ <em>S</em></span></p>
+<p>Adding these properties will make the function and set more capable of expressing different algorithms. But it also constrains the possible implementations (e.g. identity might not always exists), hence it is interesting to choose the smallest possible subset of laws that need to be satisfied.</p>
+<p>Lets begin with the basic structures and gradually add more constrains, while studying applications of each subset.</p>
+<h5 id="magma">Magma</h5>
+<p>The simplest possible definition that is covered is the <span class="math"><em>m</em><em>a</em><em>g</em><em>m</em><em>a</em></span>. It consist of a binary operation <span class="math"><em>f</em></span> and a set <span class="math"><em>S</em></span>. The only requirement is that <span class="math"><em>f</em></span> is closed over <span class="math"><em>S</em></span>, nothing more.</p>
+<p>Of course this very simplistic definition does not yield any structure in the problem and anything more constrained will still be considered a valid magma.</p>
+<p>It can modeled in Haskell using a type class on the following format:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Magma</span> a <span class="kw">where</span>
+<span class="ot">  f ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a</code></pre>
+<p>Hence any implementation (declared with instance DataType where …) would implement the function. It can be found in the <a href="http://hackage.haskell.org/package/magma">magma package</a> available on hackage.</p>
+<h5 id="semigroup">Semigroup</h5>
+<p>Semigroups add the associativity property to the magma. The name is derived from being a generalized version of groups, which are described below. Associativity allows a lot more powerful manipulations, which is appearant in the corresponding hackage package <a href="http://hackage.haskell.org/package/semigroups">semigroups</a>.</p>
+<p>Due to the relatively weak typing being applied here there is no difference to the magma-typeclass, except with the name being substituted. Hence associativity is implicit on the type level, at least in this article.</p>
+<p><span class="math"><em>F</em><em>o</em><em>l</em><em>d</em><em>i</em><em>n</em><em>g</em></span> is the operation of transforming a finite set into a single scalar value. Typically this can be realised by simply applying <span class="math"><em>f</em></span> onto the set repeatedly. This follows since the set cardinality is reduced by one for each application. Singleton sets can be considered as already reduced or invalid, the same applies to <span class="math">$\varnothing$</span>.</p>
+<p>Without associativity this must be done while maintaining order and evaluating each operation in some precise way. Associativity allows us to simply study the set of values and apply the reduction in some arbitrary order. For example it is easy to realise a parallel reduction in a tree-like fashion. Simply by taking pairs of elements from the original set and transforming each pair in parallel to a scalar, this can be repeated until the final value is obtained. The final time complexity becomes <span class="math">$O(\log \left\vert S \right\vert)$</span> given the assumption that constructing <span class="math">{∀ <em>a</em> ∈ <em>S</em>: <em>f</em>(<em>a</em>)}</span> is considered <span class="math"><em>O</em>(1)</span> time, e.g. with a large amount of cores.</p>
+<p>A simple example of folding is summing up a set of numbers, or taking the product. In the semigroups package there is also a nice application of non-empty lists being viewed as semigroups.</p>
+<h5 id="monoid">Monoid</h5>
+<p>A <span class="math"><em>m</em><em>o</em><em>n</em><em>o</em><em>i</em><em>d</em></span> is a semigroup that is constrained by satsifying the identity property. It’s typically used in a lot of different constructs and is present in the standard Haskell library (<a href="http://www.haskell.org/ghc/docs/latest/html/libraries/base/Data-Monoid.html">the base package</a>). It can be modelled with the following type class, where pure denotes the identity element:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Semigroup</span> a <span class="ot">=&gt;</span> <span class="dt">Monoid</span> a <span class="kw">where</span>
+<span class="ot">  pure ::</span> a</code></pre>
+<p>The identity property allows trivial folding in the general case since we can always treat singleton sets <span class="math">{<em>a</em>}</span> or <span class="math">$\varnothing$</span> by using the identity element, as <span class="math"><em>f</em>(<em>a</em>, <em>e</em>)</span> and <span class="math"><em>e</em></span> respectively.</p>
+<p>Monoids are extensively used within several fields and form a heavily utilized Haskell idiom when writing generic code. An example instance is string-like structures which form a monoid as follows:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Semigroup</span> <span class="dt">String</span> <span class="kw">where</span>
+  f <span class="fu">=</span> <span class="fu">concat</span>
+
+<span class="kw">instance</span> <span class="dt">Monoid</span> <span class="dt">String</span> <span class="kw">where</span>
+  pure <span class="fu">=</span> <span class="st">&quot;&quot;</span></code></pre>
+<p>This allows easily swapping the underlying string representation if only occurrences of <span class="math"><em>f</em></span> are used when performing string concatenation.</p>
+<p>There are also more advanced applications such as <a href="http://izbicki.me/blog/hlearn-cross-validates-400x-faster-than-weka">statistics</a>.</p>
+<h5 id="group">Group</h5>
+<p>A <span class="math"><em>g</em><em>r</em><em>o</em><em>u</em><em>p</em></span> further constrains a monoid by adding an inverse to all set elements. For example <span class="math">2</span> is the inverse of <span class="math">3</span> in the group (<span class="math"><em>Z</em><sub>5</sub></span>, <span class="math"> + </span>), since <span class="math">2 + 3 = 5 ≡ 0 = <em>e</em></span>.</p>
+<p>Naturally negated numbers (as members of <span class="math"><em>Z</em><sub><em>k</em></sub></span>) form candidates for inverses. But it is not really applicable to strings and string concatenation. Groups are however heavily used as building blocks for more advanced constructions, which will not be covered in this post. They are also fundamental in algorithms such as the <a href="https://en.wikipedia.org/wiki/General_number_field_sieve">General Number Field Sieve</a>.</p>
+<p>On hackage, a declaration can be found in the <a href="http://hackage.haskell.org/packages/archive/groups/0.3.0.0/doc/html/Data-Group.html">groups</a> package. The typeclass can be given as:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Monoid</span> a <span class="ot">=&gt;</span> <span class="dt">Group</span> a <span class="kw">where</span>
+<span class="ot">  finv ::</span> a <span class="ot">-&gt;</span> a</code></pre>
+<h4 id="conclusions">Conclusions</h4>
+<p>There is an implementation of Fenwick Trees available <a href="https://github.com/davnils/fenwick-semi">here</a>, which identifies and implements a semigroup-based structure. I might write a detalied blog post on it in the future.</p>
+<p>The benefits of the algebraic approach can be narrowed down to two points:</p>
+<ul>
+<li>Writing the implementation in terms of algebraic structures minimizes code repetition and allows trivial generalization.</li>
+<li>Working over some structure of a certain type constrains the implementation and eliminates a set of mistakes, such as using specific constants or relying on implicit assumptions in behaviour. This follows since all operations must be well-defined over any instance of the chosen structure.</li>
+</ul>
+<p>This survey has been quite limited in practice since it only bothers with some basic concepts in algebra. In languages such as Haskell there is also a lot of usage from category theory, where concepts such as categories, functors and monads exist.</p>
+<p>There are some practical difficulties since typeclasses are seldom given as expected. For example the base package defines a monoid in isolation, which implies that there is quite some repetition when defining structures. This is also present in the definitions of other classes such as monads. Reality does unfortunately not always meet the theoretic beauty…</p>
+<p>For further information I can recommend the book “A First Course In Abstract Algebra” by Fraleigh, and also looking into category theory and different applications in Haskell.</p>
+</div>
+
+<div class="box"></div>
+
+
   <a href="#Reliable Blind SQL Injections"></a>
   <div class="post">
 <h2>Reliable Blind SQL Injections</h2>
