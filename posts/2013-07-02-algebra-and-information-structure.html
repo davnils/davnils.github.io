@@ -7,11 +7,9 @@
 
   <p>Today I am writing on how it’s possible to find structure in information, bundled with functions, and how this can be applied in practice. This is highly applicable to software development but also comes from an interesting theoretical background.</p>
 <p>So, lets begin with information. What can be said about a data set sharing some properties? Is it possible to relate some common operations and make general statements? Lets say we define a data structure working over integers - can it be extended to arbitrary objects forming some property? It would be nice if we could write general algorithms and data structures, with the fundamental constraints in mind, and reuse them to the fullest possible extent.</p>
-<p>Algebra is a mathematical field which discusses, amongst other things, sets and related functions. This allows us to encapsulate information by providing a set of rules that need to be satisfied, in order for the information and possible functions to belong to some abstraction.</p>
-<p>In this post a basic set of abstractions are described and some practical examples are given. These are bundled with corresponding definitions in Haskell code, but the reader does not need any previous knowledge of the language in order to grasp the essence of these constructs.</p>
+<p>Algebra is a mathematical field which discusses, amongst other things, sets and related functions. This allows us to encapsulate information by providing a set of rules that need to be satisfied, in order for the information and possible functions to belong to some abstraction. In this post a basic set of abstractions are described and some practical examples are given. These are bundled with corresponding definitions in Haskell code, but the reader does not need any previous knowledge of the language in order to grasp the essence of these constructs.</p>
 <h4 id="algebra">Algebra</h4>
-<p>Lets begin with some definitions required to discuss these topics.</p>
-<p>Given a binary function <span class="math"><em>f</em>(<em>a</em>, <em>a</em>)</span> (denoted inline <span class="math"> † </span>) over a set <span class="math"><em>S</em></span>, the following is of interest (for all <span class="math"><em>a</em>, <em>b</em>, <em>c</em> ∈ <em>S</em></span>):</p>
+<p>Lets begin with some definitions required to discuss these topics. Given a binary function <span class="math"><em>f</em>(<em>a</em>, <em>a</em>)</span> (denoted inline <span class="math"> † </span>) over a set <span class="math"><em>S</em></span>, the following is of interest (for all <span class="math"><em>a</em>, <em>b</em>, <em>c</em> ∈ <em>S</em></span>):</p>
 <ul>
 <li>function associativity: <span class="math">(<em>a</em> † <em>b</em>) † <em>c</em> = <em>a</em> † (<em>b</em> † <em>c</em>)</span></li>
 <li>identity element <span class="math"><em>e</em></span> of <span class="math"><em>S</em></span>: <span class="math"><em>a</em> † <em>e</em> = <em>e</em> † <em>a</em> = <em>a</em></span></li>
@@ -22,8 +20,7 @@
 <p>Lets begin with the basic structures and gradually add more constrains, while studying applications of each subset.</p>
 <h5 id="magma">Magma</h5>
 <p>The simplest possible definition that is covered is the <span class="math"><em>m</em><em>a</em><em>g</em><em>m</em><em>a</em></span>. It consist of a binary operation <span class="math"><em>f</em></span> and a set <span class="math"><em>S</em></span>. The only requirement is that <span class="math"><em>f</em></span> is closed over <span class="math"><em>S</em></span>, nothing more.</p>
-<p>Of course this very simplistic definition does not yield any structure in the problem and anything more constrained will still be considered a valid magma.</p>
-<p>It can modeled in Haskell using a type class on the following format:</p>
+<p>Of course this very simplistic definition does not yield any structure in the problem and anything more constrained will still be considered a valid magma. It can modeled in Haskell using a type class on the following format:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Magma</span> a <span class="kw">where</span>
 <span class="ot">  f ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a</code></pre>
 <p>Hence any implementation (declared with instance DataType where …) would implement the function. It can be found in the <a href="http://hackage.haskell.org/package/magma">magma package</a> available on hackage.</p>
@@ -44,8 +41,7 @@
 
 <span class="kw">instance</span> <span class="dt">Monoid</span> <span class="dt">String</span> <span class="kw">where</span>
   pure <span class="fu">=</span> <span class="st">&quot;&quot;</span></code></pre>
-<p>This allows easily swapping the underlying string representation if only occurrences of <span class="math"><em>f</em></span> are used when performing string concatenation.</p>
-<p>There are also more advanced applications such as <a href="http://izbicki.me/blog/hlearn-cross-validates-400x-faster-than-weka">statistics</a>.</p>
+<p>This allows easily swapping the underlying string representation if only occurrences of <span class="math"><em>f</em></span> are used when performing string concatenation. There are also more advanced applications such as <a href="http://izbicki.me/blog/hlearn-cross-validates-400x-faster-than-weka">statistics</a>.</p>
 <h5 id="group">Group</h5>
 <p>A <span class="math"><em>g</em><em>r</em><em>o</em><em>u</em><em>p</em></span> further constrains a monoid by adding an inverse to all set elements. For example <span class="math">2</span> is the inverse of <span class="math">3</span> in the group (<span class="math"><em>Z</em><sub>5</sub></span>, <span class="math"> + </span>), since <span class="math">2 + 3 = 5 ≡ 0 = <em>e</em></span>.</p>
 <p>Naturally negated numbers (as members of <span class="math"><em>Z</em><sub><em>k</em></sub></span>) form candidates for inverses. But it is not really applicable to strings and string concatenation. Groups are however heavily used as building blocks for more advanced constructions, which will not be covered in this post. They are also fundamental in algorithms such as the <a href="https://en.wikipedia.org/wiki/General_number_field_sieve">General Number Field Sieve</a>.</p>
