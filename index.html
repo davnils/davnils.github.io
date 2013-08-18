@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
@@ -29,9 +29,9 @@
 
         <div id="content">
             
-  <a href="#Thoughts On Service Fingerprinting"></a>
+  <a id="thoughts_on_service_fingerprinting"></a>
   <div class="post">
-<h2>Thoughts On Service Fingerprinting</h2>
+<h2><a href="#thoughts_on_service_fingerprinting" id="postTitle">Thoughts On Service Fingerprinting</a></h2>
 
 <div class="info">
   Posted on August 18, 2013
@@ -47,14 +47,14 @@
 <p>The time domain provides a different set of properties but is typically not as generally applicable as classification in the data domain. Lets view HTTP requests from a different perspective; essentially the client makes a request and receives a reply which can be measured as bytes over time, possibly with some meaning associated to chunks of bytes. It is reasonable to believe that different services might produce different amounts of content over time, after all such a concern is not really present in the mind of an average developer. Simply plotting the number of bytes retrieved over time will yield a graph which could be studied manually in order to discern any interesting properties of a specific service. Automatic classification is obviously also interesting in this domain. There has been work done on <a href="http://www.cs.ucr.edu/~eamonn/time_series_data/">time series classification</a> which will take the complete data series and perform a classification. Alternatively it is possible to view the underlying service as something stateful. Consider for example that a XYZ service might deliver data through a set of different stages, perhaps performing some initial throttling of bandwidth and loosening up later on. Such features can be detected by taking the observations and comparing them with a set of existing models, extracting the most likely one. In the more general case it is common to use Hidden Markov Models (<a href="http://en.wikipedia.org/wiki/Hidden_Markov_model">HMM</a>) which are capable of deducing facts about the internal states by simply performing a sequence of observations. Some very similar work has been done by <a href="http://events.ccc.de/congress/2011/Fahrplan/events/4732.en.html">Burschka</a> (originally presented at the sec-t conference) where encrypted Skype traffic was monitored and the time domain was classified in order to detect the most likely spoken phrases, without access to the underlying audio stream.</p>
 <p>There are however some potential issues when dealing with time domain classification. Commonly such an attack would be performed across LANs in a protocol encapsulated with TCP/IP. This interferes with timing in several ways, due to things like IP fragmentation and TCP segmentation, tightly bonded with MSS and congestion control. Obviously there is also the problem of variance over long network paths. Reducing the variance requires relocating probes or working around the problem with a larger set of samples, potentially becoming infeasible in a practical context.</p>
 <p>In the end it is probably not feasible to perform classification in the time domain across networks. It might however be practical in certain contexts, e.g. in the case of a reduced network stack or very low latency network links with deterministic stacks. The data domain provides a reasonable set of assumptions and could be used to perform reliable classification for a wide range of services, as long as there is no active interference beyond the trivial cases. Using supervised learning to build a classifier does however require plenty of effort in acquiring a reliable data set over a wide range of configurations. Perhaps this could be improved by performing unsupervised learning while labeling the corresponding output classes in some clever way.</p>
+
+  <div class="box"></div>
 </div>
 
-<div class="box"></div>
 
-
-  <a href="#Algebra and Information Structure"></a>
+  <a id="algebra_and_information_structure"></a>
   <div class="post">
-<h2>Algebra and Information Structure</h2>
+<h2><a href="#algebra_and_information_structure" id="postTitle">Algebra and Information Structure</a></h2>
 
 <div class="info">
   Posted on July  2, 2013
@@ -113,14 +113,14 @@
 <p>This survey has been quite limited in practice since it only bothers with some basic concepts in algebra. In languages such as Haskell there is also a lot of usage from category theory, where concepts such as categories, functors and monads exist.</p>
 <p>There are some practical difficulties since typeclasses are seldom given as expected. For example the base package defines a monoid in isolation, which implies that there is quite some repetition when defining structures. This is also present in the definitions of other classes such as monads. Reality does unfortunately not always meet the theoretic beauty…</p>
 <p>For further information I can recommend the book “A First Course In Abstract Algebra” by Fraleigh, and also looking into category theory and different applications in Haskell.</p>
+
+  <div class="box"></div>
 </div>
 
-<div class="box"></div>
 
-
-  <a href="#Reliable Blind SQL Injections"></a>
+  <a id="reliable_blind_sqli"></a>
   <div class="post">
-<h2>Reliable Blind SQL Injections</h2>
+<h2><a href="#reliable_blind_sqli" id="postTitle">Reliable Blind SQL Injections</a></h2>
 
 <div class="info">
   Posted on June 20, 2013
@@ -188,23 +188,23 @@ Null hypothesis rejected: blind sql injection highly likely</code></pre>
 <p>Some other practical issues include choosing the minimum number of samples required from <span class="math">{<em>f</em><sub><em>a</em><em>c</em><em>t</em><em>i</em><em>v</em><em>e</em></sub>}</span> and <span class="math">{<em>f</em><sub><em>p</em><em>a</em><em>s</em><em>s</em><em>i</em><em>v</em><em>e</em></sub>}</span>, and deciding on some upper limit.</p>
 <p>Until now all descriptions have been given as the null hypothesis being rejected, or nothing can be concluded. This is of course a naive approach and information regarding probes (e.g. an active probe should result in significant deviation) should allow confirming the non-existence of injections.</p>
 <p>I should also mention that the percentile method is very basic and will not render optimal results in all cases. An alternative is the <span class="math"><em>B</em><em>C</em><sub><em>a</em></sub></span> method, which modifies the chosen interval points to account for skew and bias.</p>
+
+  <div class="box"></div>
 </div>
 
-<div class="box"></div>
 
-
-  <a href="#The Beginning"></a>
+  <a id="the_beginning"></a>
   <div class="post">
-<h2>The Beginning</h2>
+<h2><a href="#the_beginning" id="postTitle">The Beginning</a></h2>
 
 <div class="info">
   Posted on June 16, 2013
 </div>
 
   <p>This post indicates the beginning of this blog, which will cover various problems and projects, mostly related to theoretic computer science, math, and functional programming.</p>
-</div>
 
-<div class="box"></div>
+  <div class="box"></div>
+</div>
 
 
 
