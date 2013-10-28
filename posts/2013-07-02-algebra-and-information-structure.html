@@ -37,7 +37,7 @@
 <p>The identity property allows trivial folding in the general case since we can always treat singleton sets <span class="math">{<em>a</em>}</span> or <span class="math">$\varnothing$</span> by using the identity element, as <span class="math"><em>f</em>(<em>a</em>, <em>e</em>)</span> and <span class="math"><em>e</em></span> respectively.</p>
 <p>Monoids are extensively used within several fields and form a heavily utilized Haskell idiom when writing generic code. An example instance is string-like structures which form a monoid as follows:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Semigroup</span> <span class="dt">String</span> <span class="kw">where</span>
-  f <span class="fu">=</span> <span class="fu">concat</span>
+  f <span class="fu">=</span> concat
 
 <span class="kw">instance</span> <span class="dt">Monoid</span> <span class="dt">String</span> <span class="kw">where</span>
   pure <span class="fu">=</span> <span class="st">&quot;&quot;</span></code></pre>
